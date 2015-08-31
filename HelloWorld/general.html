@@ -1,0 +1,120 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script src="students.js">
+    </script>
+    <script src="jquery-2.1.4.js" type="text/javascript">
+    </script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="tableStyle.css">
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
+
+    <script>
+
+        color = new Array();
+        color['2'] = '#f47c63';
+        color['3'] = '#efdb62';
+        color['4'] = '#adea47';
+        color['5'] = '#3ad941';
+        color['empty'] = '#9C9C9C';
+
+        // Model data of all different disciplines;
+
+        function disciplines(dataFile) {
+            var models = new Array();
+            for (var i = 0; i < dataFile.length; i++) {
+                var student = dataFile[i];
+                if ($.inArray(student.Discipline, models) == -1) {
+                    models.push(student.Discipline);
+                }
+            }
+
+            return models;
+        }
+
+
+        function createModel(dataFile) {
+            var models = new Array();
+            for (var i = 0; i < dataFile.length; i++) {
+                var student = dataFile[i];
+                var model = models[student.Name];
+                if (typeof model === 'undefined') {
+                    model = {};
+                    model.Name = student.Name;
+                    model.Discipline = new Array;
+                    models[model.Name] = model;
+                }
+                var disciplineModel = {};
+                disciplineModel.Name = student.Discipline;
+                disciplineModel.mark = student.Mark;
+                model.Discipline[disciplineModel.Name] = disciplineModel;
+
+            }
+            return models;
+        };
+
+        function output(students, disciplines) {
+
+            var tab = document.createElement("table");
+
+            // fill the 1st string in the table
+
+            var disRow = document.createElement('tr');
+            var disCell = document.createElement('th');
+
+
+            var disText = document.createTextNode('');
+            disCell.appendChild(disText);
+            disRow.appendChild(disCell);
+            for (var key = 0; key < disciplines.length; key++) {
+                var disciplineCell = document.createElement('th');
+                var disciplineText = document.createTextNode(disciplines[key]);
+                disciplineCell.appendChild(disciplineText);
+                disRow.appendChild(disciplineCell);
+            }
+            tab.appendChild(disRow);
+
+            //fill other strings in the table
+
+            for (name in students) {
+                student = students[name];
+                var stRow = document.createElement('tr');
+                var stCell = document.createElement('th');
+                var stText = document.createTextNode(student.Name);
+                stCell.appendChild(stText);
+                stRow.appendChild(stCell);
+                for (var i = 0; i < disciplines.length; i++) {
+                    var markCell = document.createElement('td');
+                    if (typeof student.Discipline[disciplines[i]] != 'undefined') {
+                        var markText = document.createTextNode(student.Discipline[disciplines[i]].mark);
+                        markCell.style.backgroundColor = color[student.Discipline[disciplines[i]].mark];
+                    } else {
+                        var markText = document.createTextNode('');
+                        markCell.style.backgroundColor = color['empty'];
+                    }
+                    markCell.appendChild(markText);
+                    stRow.appendChild(markCell);
+                }
+                tab.appendChild(stRow);
+            }
+            document.body.appendChild(tab);
+        }
+
+        $(document).ready(function () {
+            var s = createModel(data);
+            var d = disciplines(data);
+            output(s, d);
+        });
+
+    </script>
+    <a href="students.html">Студенты</a>
+    <a href="disciplines.html">Дисциплины</a>
+
+</body>
+
+</html>

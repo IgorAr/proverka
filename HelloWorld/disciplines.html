@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <script src = "students.js">
+  </script>
+  <script src = "jquery-2.1.4.js"   type="text/javascript">
+   </script>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  
+  <script>
+     // Creating modelData
+	function createModel(dataFile) {
+	var models=new Array();  
+	for (var i=0; i<dataFile.length; i++) {
+	  var student = dataFile[i];
+	  var model = models[student.Discipline]; 
+      if (typeof model === 'undefined') {
+       model = {};
+       model.Name = student.Discipline;
+       model.Students = new Array();
+	  }
+	  if  (student.Passed==true) {
+	   model.Students.push(student.Name);
+	   models[model.Name] = model;
+	  }
+	   
+	     }
+	  return models;
+    };
+    
+ 	
+  //Creating table
+  
+    function output(modelData) {
+	var tab=document.createElement("table"); 
+    for (k in modelData) {
+	  model=modelData[k];
+	  var disciplineRow = document.createElement('tr');
+	  var disciplineNameCell = document.createElement('td');
+	  var studentPassedCell = document.createElement('td');
+	  var nameText = document.createTextNode(model.Name);
+	  var passedText = document.createTextNode(model.Students);
+	  disciplineNameCell.appendChild(nameText);
+	  studentPassedCell.appendChild(passedText);
+   	  disciplineRow.appendChild(disciplineNameCell);
+      disciplineRow.appendChild(studentPassedCell);
+	  tab.appendChild(disciplineRow);
+	};
+   document.body.appendChild(tab);
+   };
+   
+   //Output results
+   $( document ).ready(function() {
+  	output(createModel(data));
+	});
+	
+  </script>
+ 
+<a href="general.html">Таблица</a>
+</body>
+
+</html>
+
+
