@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -14,9 +14,19 @@
 
 <body>
 
-    <script>
+    <a href="students.html">Студенты</a>
+    <a href="disciplines.html">Дисциплины</a>
 
-        color = new Array();
+    <script>
+        var colors =
+            [
+                '#f47c63',
+                '#efdb62',
+                '#adea47',
+                '#3ad941'
+            ];
+
+        var color = new Array();
         color['2'] = '#f47c63';
         color['3'] = '#efdb62';
         color['4'] = '#adea47';
@@ -36,7 +46,6 @@
 
             return models;
         }
-
 
         function createModel(dataFile) {
             var models = new Array();
@@ -112,8 +121,6 @@
         });
 
     </script>
-    <a href="students.html">Студенты</a>
-    <a href="disciplines.html">Дисциплины</a>
 
 </body>
 
