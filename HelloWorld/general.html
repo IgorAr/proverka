@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -14,113 +14,91 @@
 
 <body>
 
-    <a href="students.html">Студенты</a>
-    <a href="disciplines.html">Дисциплины</a>
-
     <script>
-        var colors =
-            [
-                '#f47c63',
-                '#efdb62',
-                '#adea47',
-                '#3ad941'
-            ];
-
-        var color = new Array();
-        color['2'] = '#f47c63';
-        color['3'] = '#efdb62';
-        color['4'] = '#adea47';
-        color['5'] = '#3ad941';
-        color['empty'] = '#9C9C9C';
-
-        // Model data of all different disciplines;
-
+        var colors = [
+	  '#FF0000',
+	 '#FF3300',
+	  '#FF6600',
+       '#FF8000',
+       '#FFB200',
+	   '#FFCC00',
+	   '#FFE500',
+	   '#FFFF00',
+	   '#CCFF00',
+	   '#99FF00',
+	   '#33FF00',
+	   '#00CC00'
+        ]
         function disciplines(dataFile) {
             var models = new Array();
             for (var i = 0; i < dataFile.length; i++) {
                 var student = dataFile[i];
-                if ($.inArray(student.Discipline, models) == -1) {
-                    models.push(student.Discipline);
+                if (typeof models[student.Name] === 'undefined') {
+                    models[student.Name] = 0;
+                }
+                if (student.Passed == true) {
+                    models[student.Name]++;
                 }
             }
-
             return models;
         }
 
-        function createModel(dataFile) {
-            var models = new Array();
-            for (var i = 0; i < dataFile.length; i++) {
-                var student = dataFile[i];
-                var model = models[student.Name];
-                if (typeof model === 'undefined') {
-                    model = {};
-                    model.Name = student.Name;
-                    model.Discipline = new Array;
-                    models[model.Name] = model;
-                }
-                var disciplineModel = {};
-                disciplineModel.Name = student.Discipline;
-                disciplineModel.mark = student.Mark;
-                model.Discipline[disciplineModel.Name] = disciplineModel;
-
-            }
-            return models;
+        function comparison(a, b) {
+            a = a[1];
+            b = b[1];
+            return a < b ? -1 : (a > b ? 1 : 0);
         };
 
-        function output(students, disciplines) {
+        function sortDisciplines(disciplines) {
+            var temp = [];
+            for (var key in disciplines) temp.push([key, disciplines[key]]);
+            temp.sort(comparison);
+            return temp;
+        }
 
+        function color(students, n) {
+            var p = Math.floor((colors.length / students.length) * n);
+            var color = colors[p]
+            return color;
+        }
+
+        function table(sortDisciplines) {
             var tab = document.createElement("table");
-
-            // fill the 1st string in the table
-
             var disRow = document.createElement('tr');
-            var disCell = document.createElement('th');
-
-
-            var disText = document.createTextNode('');
-            disCell.appendChild(disText);
-            disRow.appendChild(disCell);
-            for (var key = 0; key < disciplines.length; key++) {
-                var disciplineCell = document.createElement('th');
-                var disciplineText = document.createTextNode(disciplines[key]);
-                disciplineCell.appendChild(disciplineText);
-                disRow.appendChild(disciplineCell);
-            }
+            var disCell1 = document.createElement('th');
+            var disText1 = document.createTextNode('Student name');
+            var disCell2 = document.createElement('th');
+            var disText2 = document.createTextNode('Прямоугольник');
+            disCell1.appendChild(disText1);
+            disRow.appendChild(disCell1);
+            disCell2.appendChild(disText2);
+            disRow.appendChild(disCell2);
             tab.appendChild(disRow);
-
-            //fill other strings in the table
-
-            for (name in students) {
-                student = students[name];
-                var stRow = document.createElement('tr');
-                var stCell = document.createElement('th');
-                var stText = document.createTextNode(student.Name);
-                stCell.appendChild(stText);
-                stRow.appendChild(stCell);
-                for (var i = 0; i < disciplines.length; i++) {
-                    var markCell = document.createElement('td');
-                    if (typeof student.Discipline[disciplines[i]] != 'undefined') {
-                        var markText = document.createTextNode(student.Discipline[disciplines[i]].mark);
-                        markCell.style.backgroundColor = color[student.Discipline[disciplines[i]].mark];
-                    } else {
-                        var markText = document.createTextNode('');
-                        markCell.style.backgroundColor = color['empty'];
-                    }
-                    markCell.appendChild(markText);
-                    stRow.appendChild(markCell);
-                }
-                tab.appendChild(stRow);
+            for (var i = 0; i < sortDisciplines.length; i++) {
+                var studentRow = document.createElement('tr');
+                var studentCell = document.createElement('th');
+                var studentText = document.createTextNode(sortDisciplines[i][0]);
+                studentCell.appendChild(studentText);
+                studentRow.appendChild(studentCell);
+                var boxCell = document.createElement('td');
+                var box = document.createElement('div');
+                box.style.width = 50 + sortDisciplines[i][1] + '%';
+                box.style.height = '50px';
+                box.style.background = color(sortDisciplines, sortDisciplines[i][1]);
+                boxCell.appendChild(box);
+                studentRow.appendChild(boxCell);
+                tab.appendChild(studentRow);
             }
             document.body.appendChild(tab);
         }
-
         $(document).ready(function () {
-            var s = createModel(data);
-            var d = disciplines(data);
-            output(s, d);
+            var p1 = disciplines(data);
+            var p2 = sortDisciplines(p1);
+            table(p2);
         });
-
     </script>
+    <a href="students.html">Студенты</a>
+    <a href="disciplines.html">Дисциплины</a>
 
 </body>
 
