@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="chart.html" />
     <Content Include="disciplines.html" />
     <Content Include="general.html" />
     <Content Include="jquery-2.1.4.js" />

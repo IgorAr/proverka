@@ -1,0 +1,104 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script src="students.js">
+    </script>
+    <script src="jquery-2.1.4.js" type="text/javascript">
+    </script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="tableStyle.css">
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
+
+    <script>
+        // colors for students chart
+        var colors = [
+	  '#FF0000',
+	  '#FF3300',
+	  '#FF6600',
+      '#FF8000',
+      '#FFB200',
+	  '#FFCC00',
+	  '#FFE500',
+	  '#FFFF00',
+	  '#CCFF00',
+	  '#99FF00',
+	  '#33FF00',
+	  '#00CC00'
+        ]
+        // array name - number of passed disciplines
+        function disciplines(dataFile) {
+            var models = new Array();
+            for (var i = 0; i < dataFile.length; i++) {
+                var student = dataFile[i];
+                if (typeof models[student.Name] === 'undefined') {
+                    models[student.Name] = 0;
+                }
+                if (student.Passed == true) {
+                    models[student.Name]++;
+                }
+            }
+            return models;
+        }
+
+        function compare(a, b) {
+            a = a[1];
+            b = b[1];
+            return a < b ? 1 : (a > b ? -1 : 0);
+        };
+
+        // sorting students from winners to loosers
+        function sortDisciplines(disciplines) {
+            var temp = [];
+            for (var key in disciplines) temp.push([key, disciplines[key]]);
+            temp.sort(compare);
+            return temp;
+        }
+       
+        function table(sortDisciplines) {
+            var tab = document.createElement("table");
+            // fill the 1st string in the table
+            var disRow = document.createElement('tr');
+            var disCell1 = document.createElement('th');
+            var disText1 = document.createTextNode('Student name');
+            var disCell2 = document.createElement('th');
+            var disText2 = document.createTextNode('Bar');
+            disCell1.appendChild(disText1);
+            disRow.appendChild(disCell1);
+            disCell2.appendChild(disText2);
+            disRow.appendChild(disCell2);
+            tab.appendChild(disRow);
+            for (var i = 0; i < sortDisciplines.length; i++) {
+                var studentRow = document.createElement('tr');
+                var studentCell = document.createElement('th');
+                var studentText = document.createTextNode(sortDisciplines[i][0]);
+                studentCell.appendChild(studentText);
+                studentRow.appendChild(studentCell);
+                var boxCell = document.createElement('td');
+                var box = document.createElement('div');
+                box.style.width = 150 * (sortDisciplines[i][1] - sortDisciplines[0][1]) / (sortDisciplines[sortDisciplines.length - 1][1] - sortDisciplines[0][1]) + 50 + 'px';
+                box.style.height = '20px';
+                box.style.background = colors[Math.floor((colors.length - 1) * (sortDisciplines[i][1] - sortDisciplines[0][1]) / (sortDisciplines[sortDisciplines.length - 1][1] - sortDisciplines[0][1]))];
+                boxCell.appendChild(box);
+                studentRow.appendChild(boxCell);
+                tab.appendChild(studentRow);
+            }
+            document.body.appendChild(tab);
+        }
+
+        $(document).ready(function () {
+            var dataModel = disciplines(data);
+            var sortDataModel = sortDisciplines(dataModel);
+            table(sortDataModel);
+        });
+
+    </script>
+    <a href="general.html">Таблица</a>
+
+</body>
+
+</html>
