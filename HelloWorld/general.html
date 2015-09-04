@@ -65,8 +65,6 @@
 
             var disRow = document.createElement('tr');
             var disCell = document.createElement('th');
-
-
             var disText = document.createTextNode('');
             disCell.appendChild(disText);
             disRow.appendChild(disCell);
@@ -81,7 +79,7 @@
             //fill other strings in the table
 
             for (name in students) {
-                student = students[name];
+                var student = students[name];
                 var stRow = document.createElement('tr');
                 var stCell = document.createElement('th');
                 var stText = document.createTextNode(student.Name);
@@ -89,11 +87,12 @@
                 stRow.appendChild(stCell);
                 for (var i = 0; i < disciplines.length; i++) {
                     var markCell = document.createElement('td');
+                    var markText;
                     if (typeof student.Discipline[disciplines[i]] != 'undefined') {
-                        var markText = document.createTextNode(student.Discipline[disciplines[i]].mark);
+                        markText = document.createTextNode(student.Discipline[disciplines[i]].mark);
                         markCell.style.backgroundColor = color[student.Discipline[disciplines[i]].mark];
                     } else {
-                        var markText = document.createTextNode('');
+                        markText = document.createTextNode('');
                         markCell.style.backgroundColor = color['empty'];
                     }
                     markCell.appendChild(markText);
