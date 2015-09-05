@@ -15,7 +15,6 @@
 <body>
 
     <script>
-
         color = new Array();
         color['2'] = '#f47c63';
         color['3'] = '#efdb62';
@@ -25,7 +24,7 @@
 
         // Model data of all different disciplines;
 
-        function disciplines(dataFile) {
+        function getDifferentDisciplines(dataFile) {
             var models = new Array();
             for (var i = 0; i < dataFile.length; i++) {
                 var student = dataFile[i];
@@ -33,9 +32,8 @@
                     models.push(student.Discipline);
                 }
             }
-
             return models;
-        }
+        };
 
         function createModel(dataFile) {
             var models = new Array();
@@ -52,17 +50,14 @@
                 disciplineModel.Name = student.Discipline;
                 disciplineModel.mark = student.Mark;
                 model.Discipline[disciplineModel.Name] = disciplineModel;
-
             }
             return models;
         };
 
+        //output results to the table
         function output(students, disciplines) {
-
             var tab = document.createElement("table");
-
             // fill the first string in the table...
-
             var disRow = document.createElement('tr');
             var disCell = document.createElement('th');
             var disText = document.createTextNode('');
@@ -101,12 +96,12 @@
                 tab.appendChild(stRow);
             }
             document.body.appendChild(tab);
-        }
+        };
 
         $(document).ready(function () {
-            var s = createModel(data);
-            var d = disciplines(data);
-            output(s, d);
+            var model = createModel(data);
+            var difDisciplines = getDifferentDisciplines(data);
+            output(model, difDisciplines);
         });
 
     </script>

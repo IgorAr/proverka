@@ -7,6 +7,10 @@ table-layout: fixed;
 
 th {
     height: 50px;
-	width: 100px;
+	width: 200px;
 	background:  #D3D3D3;
+}
+
+td {
+    width: 10px; 
 }

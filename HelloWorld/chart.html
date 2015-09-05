@@ -13,9 +13,9 @@
 </head>
 
 <body>
-   
+
     <script>
-        // colors for students chart 
+        // colors for students chart
         var colors = [
 	  '#FF0000',
 	  '#FF3300',
@@ -29,9 +29,13 @@
 	  '#99FF00',
 	  '#33FF00',
 	  '#00CC00'
-        ]
+        ];
+
+        var DEFAULT_BAR_WIDTH = 150;
+        var BAR_HEIGTH = 20;
+
         // array name - number of passed disciplines
-        function disciplines(dataFile) {
+        function getPassedDisciplines(dataFile) {
             var models = new Array();
             for (var i = 0; i < dataFile.length; i++) {
                 var student = dataFile[i];
@@ -43,23 +47,33 @@
                 }
             }
             return models;
-        }
+        };
 
         function compare(a, b) {
             a = a[1];
             b = b[1];
-            return a < b ? 1 : (a > b ? -1 : 0);
+            return a < b ? -1 : (a > b ? 1 : 0);
         };
 
         // sorting students from winners to looosers
-        function sortDisciplines(disciplines) {
+        function getSortDisciplines(disciplines) {
             var temp = [];
             for (var key in disciplines) temp.push([key, disciplines[key]]);
             temp.sort(compare);
             return temp;
-        }
-       
-        function table(sortDisciplines) {
+        };
+
+        function getWidthRectangle(sortDisciplines, i) {
+            var widthRectangle = DEFAULT_BAR_WIDTH * (sortDisciplines[i][1] - sortDisciplines[0][1]) / (sortDisciplines[sortDisciplines.length - 1][1] - sortDisciplines[0][1]) + 50 + 'px';
+            return widthRectangle;
+        };
+
+        function getColor(sortDisciplines, i) {
+            var color = colors[Math.floor((colors.length - 1) * (sortDisciplines[i][1] - sortDisciplines[0][1]) / (sortDisciplines[sortDisciplines.length - 1][1] - sortDisciplines[0][1]))];
+            return color;
+        };
+
+        function createTable(sortDisciplines) {
             var tab = document.createElement("table");
             // fill the first string in the table
             var disRow = document.createElement('tr');
@@ -67,33 +81,41 @@
             var disText1 = document.createTextNode('Student name');
             var disCell2 = document.createElement('th');
             var disText2 = document.createTextNode('Bar');
+            var disCell3 = document.createElement('th');
+            var disText3 = document.createTextNode('Number');
             disCell1.appendChild(disText1);
             disRow.appendChild(disCell1);
             disCell2.appendChild(disText2);
             disRow.appendChild(disCell2);
+            disCell3.appendChild(disText3);
+            disRow.appendChild(disCell3);
             tab.appendChild(disRow);
-            for (var i = 0; i < sortDisciplines.length; i++) {
+            for (var i = sortDisciplines.length - 1; i >= 0; i--) {
                 var studentRow = document.createElement('tr');
                 var studentCell = document.createElement('th');
-                var studentText = document.createTextNode(sortDisciplines[i][0]);
-                studentCell.appendChild(studentText);
-                studentRow.appendChild(studentCell);
                 var boxCell = document.createElement('td');
+                var numberCell = document.createElement('td');
+                var studentText = document.createTextNode(sortDisciplines[i][0]);
                 var box = document.createElement('div');
-                box.style.width = 150 * (sortDisciplines[i][1] - sortDisciplines[0][1]) / (sortDisciplines[sortDisciplines.length - 1][1] - sortDisciplines[0][1]) + 50 + 'px';
+                var numberText = document.createTextNode(sortDisciplines[i][1]);
+                studentCell.appendChild(studentText);
+                box.style.width = getWidthRectangle(sortDisciplines, i);
                 box.style.height = '20px';
-                box.style.background = colors[Math.floor((colors.length - 1) * (sortDisciplines[i][1] - sortDisciplines[0][1]) / (sortDisciplines[sortDisciplines.length - 1][1] - sortDisciplines[0][1]))];
+                box.style.background = getColor(sortDisciplines, i);
                 boxCell.appendChild(box);
+                numberCell.appendChild(numberText);
+                studentRow.appendChild(studentCell);
                 studentRow.appendChild(boxCell);
+                studentRow.appendChild(numberCell);
                 tab.appendChild(studentRow);
             }
             document.body.appendChild(tab);
-        }
+        };
 
         $(document).ready(function () {
-            var dataModel = disciplines(data);
-            var sortDataModel = sortDisciplines(dataModel);
-            table(sortDataModel);
+            var passedDisciplines = getPassedDisciplines(data);
+            var sortDisciplines = getSortDisciplines(passedDisciplines);
+            createTable(sortDisciplines);
         });
 
     </script>
